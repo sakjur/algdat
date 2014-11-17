@@ -1,0 +1,33 @@
+require 'rakejava'
+require 'rake/clean'
+
+CLEAN.include 'classes'
+CLEAN.include 'id1020.jar'
+CLEAN.include 'docs'
+
+task :default => :compile
+task :jar => "id1020.jar"
+
+jar "id1020.jar" => :compile do |t|
+	t.files << JarFiles["classes", "**/*.class"]
+	t.files << JarFiles["libs/", "**/*.jar"]
+	t.main_class = "is.mjuk.id1020.BinarySearch"
+	t.manifest = {:version => '0.0.1'}
+end
+
+javac :compile => "classes" do |t|
+	t.src << Sources["source/", "**/*.java"]
+	t.classpath << Dir["libs/*.jar"]
+	t.dest = 'classes'
+end
+
+task :run => :compile do |t|
+	sh "java -cp ./libs/stdlib-1.0.jar:classes is.mjuk.id1020.BinarySearch largeW.txt"
+end
+
+task :doc => "docs" do |t|
+	sh "javadoc -sourcepath source/ -d docs/ is.mjuk.id1020"
+end
+
+directory "classes"
+directory "docs"

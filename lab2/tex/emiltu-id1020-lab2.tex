@@ -1,0 +1,93 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\lstset{
+  language=Java,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  breaklines=true,
+  frame=lr,
+  captionpos=b,
+  showstringspaces=false,
+  escapeinside={@*}{*@}
+}
+\newcounter{counter}
+
+\title{ID1020 Laboration 2}
+\author{Emil Tullstedt}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Series and Combinations}
+\label{sec:sac}
+
+\subsection{First identity}
+
+Show the identity
+\begin{equation} \label{eq:id1assumption}
+\sum_{i=0}^nn = \frac{n(n+1)}{2} for\ n \in \mathbb{N}
+\end{equation}
+
+Testing identity for $n = 1$
+
+\begin{equation} \label{eq:id1sum1}
+\sum_{i=0}^11 = 0 + 1 = 1
+\end{equation}
+
+\begin{equation} \label{eq:id1frac1}
+\frac{1(1+1)}{2} = \frac{2}{2} = 1
+\end{equation}
+
+As $(\ref{eq:id1frac1}) = (\ref{eq:id1sum1})$ is true (\ref{eq:id1assumption}) holds for $n = 1$.
+
+Writing the identity in the form of a recursive function
+
+\begin{equation}
+\sum_{i=0}^kk = 
+	\begin{cases}
+		S_k = S_{k-1} + k\\
+		S_0 = 0
+	\end{cases} for\ k \in \mathbb{N}
+\end{equation}
+
+Induction assumption: The identity holds for an arbitrary $n-1$.
+If true, the following equation can be solved
+
+\begin{equation}
+S_n = S_{n-1} + n = \frac{n(n + 1)}{2}
+\end{equation}
+
+Solution
+
+\begin{equation}
+\begin{split}
+S_n = S_{n-1} + n = \frac{n(n-1)}{2} + n = \frac{n(n-1)}{2} + \frac{2n}{2} = \\ = \frac{n(n-1) + 2n}{2} = \frac{n^2-n + 2n}{2} = \frac{n^2 + n}{2} = \frac{n(n + 1)}{2}
+\end{split}
+\end{equation}
+
+Thus, we can prove that (\ref{eq:id1assumption}) is true for all $n \in \mathbb{N}$.
+
+$$\therefore \sum_{i=0}^nn = \frac{n(n+1)}{2} for\ n \in \mathbb{N}$$
+
+\subsection{Second identity}
+
+$$\binom{n}{2} = \frac{n(n-1)}{2} for\ n \in \mathbb{N}$$
+
+Proof
+$$\binom{n}{2} = \frac{n!}{2!(n-2)!} = \frac{n \times (n-1) \times (n-2)!}{2!(n-2)!} = \frac{n(n-1)}{2} \therefore$$
+
+\end{document}
