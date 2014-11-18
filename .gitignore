@@ -13,3 +13,11 @@ hs_err_pid*
 
 # target directories
 target/
+
+*.swp
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+*.toc
+

@@ -7,6 +7,7 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{hyperref}
 
 \lstset{
   language=Java,
@@ -39,13 +40,13 @@
 
 Show the identity
 \begin{equation} \label{eq:id1assumption}
-\sum_{i=0}^nn = \frac{n(n+1)}{2} for\ n \in \mathbb{N}
+\sum_{i=0}^n i = \frac{n(n+1)}{2} for\ n \in \mathbb{N}
 \end{equation}
 
 Testing identity for $n = 1$
 
 \begin{equation} \label{eq:id1sum1}
-\sum_{i=0}^11 = 0 + 1 = 1
+\sum_{i=0}^1i = 0 + 1 = 1
 \end{equation}
 
 \begin{equation} \label{eq:id1frac1}
@@ -57,7 +58,7 @@ As $(\ref{eq:id1frac1}) = (\ref{eq:id1sum1})$ is true (\ref{eq:id1assumption}) h
 Writing the identity in the form of a recursive function
 
 \begin{equation}
-\sum_{i=0}^kk = 
+\sum_{i=0}^ki = 
 	\begin{cases}
 		S_k = S_{k-1} + k\\
 		S_0 = 0
@@ -81,7 +82,7 @@ S_n = S_{n-1} + n = \frac{n(n-1)}{2} + n = \frac{n(n-1)}{2} + \frac{2n}{2} = \\ 
 
 Thus, we can prove that (\ref{eq:id1assumption}) is true for all $n \in \mathbb{N}$.
 
-$$\therefore \sum_{i=0}^nn = \frac{n(n+1)}{2} for\ n \in \mathbb{N}$$
+$$\therefore \sum_{i=0}^n i = \frac{n(n+1)}{2} for\ n \in \mathbb{N}$$
 
 \subsection{Second identity}
 
@@ -89,5 +90,78 @@ $$\binom{n}{2} = \frac{n(n-1)}{2} for\ n \in \mathbb{N}$$
 
 Proof
 $$\binom{n}{2} = \frac{n!}{2!(n-2)!} = \frac{n \times (n-1) \times (n-2)!}{2!(n-2)!} = \frac{n(n-1)}{2} \therefore$$
+
+\section{Binary Search}
+
+\subsection{Pre- and postconditions}
+\label{subsec:prepostcond}
+Before the execution of a binary search, you need a sorted and comparable array\footnote{any sorted list of elements that may be randomly accessed will suffice} of a known amount of elements (as you'll need to know where the middle is).
+
+The binary search will return a sub-zero code\footnote{Only the \textit{-1} code is utilized in the code related to this task, but the check is for any negative digit} (as it cannot be the index of an element in an array) for unsuccessful searches, if the search is successful, the search will return the index of the position where the found item is positioned.
+
+\subsection{How Does Binary Search Work?}
+\label{subsec:binarysearchexplanation}
+As per subsection \ref{subsec:prepostcond}, binary search operates on a sorted list which is randomly accessible to find a match. A binary search works by comparing the searched for element (the $key$) with the middle-most element ($mid$) of an array.
+
+It then proceeds with either of four options - if $mid > key$, the binary search is executed again on a sub-array with the lowest element being the same and the highest element being $mid$, if $mid < key$ the reverse is true, and the binary search is executed on a sub-array where $mid + 1$ is the lowest element and the highest element is the same.
+
+If there's a perfect match $mid = key$, the return value is set to $mid$ and the binary search is done. If the lowest element is higher than the highest element in the sub-array, the search has failed and the binary search returns an impossible index $-1$ to indicate to the caller that no result have been found.
+
+\subsection{What Is The Time Complexity of A Binary Search}
+\label{subsec:binsearchtime}
+In simplified form, the binary search explained in sub-section \ref{subsec:binarysearchexplanation} operates in either of two ways --- it either outputs an index (negative if failure, positive if success) or creates a sub-array which contains half of the elements which were present in the original array.
+
+This means that an array containing $N$ elements where $N > 0\ for\  N \in \mathbb{N}$ either immediately returns a value, in which case the run time is $1$ or it halves the size of the search to $\frac{N}{2}$. As this is repeated, the size of the search will be $$\frac{N}{2}, \frac{N}{4}, \frac{N}{8}, \cdots, \sim \frac{N}{N/2}, \sim \frac{N}{N}$$ or $$\frac{N}{2}, \frac{N}{2^2}, \frac{N}{2^3}, \cdots, \sim \frac{N}{2^{\log_{2}{(N)}}*2^{-1}}, \sim \frac{N}{2^{\log_{2}{(N)}}}$$
+
+As the maximum amounts of iterations the function may take until there are only a single element to examine is $log_{2}{(N)}$ the time complexity of N is $O(log{N})$ and it is a logarithmic algorithm.
+
+\subsection{Inefficiency}
+As Java doesn't handle recursion in a sane way, the primary issue with the code is that it uses recursive functions. This may be solved by either using the new \textit{lambda}-functions featured in Java 8 or by using loops instead of recursion.
+
+A naïve way of solving this with minimal change of code would be by creating a \texttt{while(true)}-loop that is simply just replacing the high or low-variables to create sub-arrays.
+
+\begin{lstlisting}[caption={Non-recursive version of the binary search}, label=lst:naive1]
+public static int search(String key, String[] a, 
+	int lo, int hi) {                                                         
+    // possible key indices in [lo, hi)                                                                                    
+    while (true) {                                                                                                         
+        if (hi <= lo) return -1;                                                                                           
+        int mid = lo + (hi - lo) / 2;                                                                                      
+        int cmp = a[mid].compareTo(key);                                                                                   
+        if      (cmp > 0) hi = mid;                                                                                        
+        else if (cmp < 0) lo = mid+1;                                                                                      
+        else              return mid;                                                                                      
+    }                                                                                                                      
+} 
+\end{lstlisting}
+
+There's still an issue present in the solution given in listing \ref{lst:naive1} is that there's a risk of getting stuck in an eternal loop if there's a programming error somewhere. This risk was present in the original implementation as well. You could implement a run-time check to prevent the loop from being run more than $\log_{2}{N}$ times, in which case you'd want to throw an exception as this is a programming error rather than anything else.
+
+The solution in listing \ref{lst:naive1} assumes that it's better to get stuck in an eternal loop than to give a potentially erroneous return code and that exception handling is out of scope of this task, which is why this feature is not implemented.
+
+\subsection{Tests on an Arbitrary Array}
+My arbitrary list of non-trivial items which fulfill the prerequisites is taken from 70 names of American presidents taken from \url{http://pkgs.fedoraproject.org/cgit/words.git/tree/words-3.0-presidents.patch}. The list in it's entirety is shown below:
+
+\begin{tiny}
+Abraham Adams Andrew Arthur Barack Benjamin Bill Buchanan Buren Bush Calvin Carter Chester Cleveland Clinton Coolidge Dwight Eisenhower Fillmore Ford Franklin Garfield George Gerald Grant Grover Harding Harrison Harry Hayes Herbert Hoover Jackson James Jefferson Jimmy John Johnson Kennedy Lincoln Lyndon Madison Martin McKinley Millard Monroe Nixon Obama Pierce Polk Quincy Reagan Richard Ronald Roosevelt Rutherford Taft Taylor Theodore Thomas Truman Tyler Ulysses Van Warren Washington William Wilson Woodrow Zachar
+\end{tiny}
+
+The middle-most element in this list is Jimmy, which is accessed firstly as per sub-section \ref{subsec:binsearchtime} as the first middle item on every run. Any search for the middlemost element in a binary search would have a time complexity of $O(N)$.
+
+The worst-case is also discussed in sub-section \ref{subsec:binsearchtime}, and will have a time complexity of $O(\log(N))$. As $6 > \log_{2}{70} > 7$ we'll have to do a maximum of 7 comparisons to find worst case. To find one example of a worst-case in the case, we'll simply assume that the item is found when only one item remains to be examined, therefore we have a worse-case scenario as per:
+
+\begin{enumerate}
+\item $n < a[35]$
+\item $n < a[17]$
+\item $n < a[8]$
+\item $n > a[4]$
+\item $n > a[2]$
+\item $n > a[1]$
+\item $n = a[0]$
+\end{enumerate}
+
+Thus we can see that finding the first object in the binary list (\texttt{Abraham}) has a time complexity $O(\log(N))$, which is also worst case.
+
+\section{Implementation of a List}
 
 \end{document}
