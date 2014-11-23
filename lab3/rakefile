@@ -22,7 +22,7 @@ javac :compile => "classes" do |t|
 end
 
 task :run => :compile do |t|
-	sh "java -cp ./libs/stdlib-1.0.jar:classes is.mjuk.id1020.BinarySearch largeW.txt"
+	sh "java -cp ./libs/stdlib-1.0.jar:classes is.mjuk.id1020.Main"
 end
 
 task :doc => "docs" do |t|
