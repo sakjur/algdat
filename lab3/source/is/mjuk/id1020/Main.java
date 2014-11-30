@@ -19,8 +19,19 @@ public class Main {
                 l.prepend(c);
             }
 
-            l.sort();
+            Integer inversions = l.inversions();
+
+            Integer swaps = l.sort();
             printList(l);
+
+            StdOut.println(inversions.toString() + " inversions & " + 
+                swaps.toString() + " swaps.");
+
+            if (inversions == swaps) {
+                StdOut.println("Same amount of inversions and swaps");
+            } else {
+                StdOut.println("Not the same amount of inversions and swaps?");
+            }
         }
     }
 

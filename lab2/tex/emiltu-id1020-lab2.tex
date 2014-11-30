@@ -146,7 +146,7 @@ My arbitrary list of non-trivial items which fulfill the prerequisites is taken 
 Abraham Adams Andrew Arthur Barack Benjamin Bill Buchanan Buren Bush Calvin Carter Chester Cleveland Clinton Coolidge Dwight Eisenhower Fillmore Ford Franklin Garfield George Gerald Grant Grover Harding Harrison Harry Hayes Herbert Hoover Jackson James Jefferson Jimmy John Johnson Kennedy Lincoln Lyndon Madison Martin McKinley Millard Monroe Nixon Obama Pierce Polk Quincy Reagan Richard Ronald Roosevelt Rutherford Taft Taylor Theodore Thomas Truman Tyler Ulysses Van Warren Washington William Wilson Woodrow Zachar
 \end{tiny}
 
-The middle-most element in this list is Jimmy, which is accessed firstly as per sub-section \ref{subsec:binsearchtime} as the first middle item on every run. Any search for the middlemost element in a binary search would have a time complexity of $O(N)$.
+The middle-most element in this list is Jimmy, which is accessed firstly as per sub-section \ref{subsec:binsearchtime} as the first middle item on every run. Any search for the middlemost element in a binary search would have a time complexity of $O(1)$ as it is accessed on the very first recursion. As there can be no improvement from $O(1)$, this is the best-case.
 
 The worst-case is also discussed in sub-section \ref{subsec:binsearchtime}, and will have a time complexity of $O(\log(N))$. As $6 > \log_{2}{70} > 7$ we'll have to do a maximum of 7 comparisons to find worst case. To find one example of a worst-case in the case, we'll simply assume that the item is found when only one item remains to be examined, therefore we have a worse-case scenario as per:
 
@@ -154,14 +154,12 @@ The worst-case is also discussed in sub-section \ref{subsec:binsearchtime}, and 
 \item $n < a[35]$
 \item $n < a[17]$
 \item $n < a[8]$
-\item $n > a[4]$
-\item $n > a[2]$
-\item $n > a[1]$
+\item $n < a[4]$
+\item $n < a[2]$
+\item $n < a[1]$
 \item $n = a[0]$
 \end{enumerate}
 
 Thus we can see that finding the first object in the binary list (\texttt{Abraham}) has a time complexity $O(\log(N))$, which is also worst case.
-
-\section{Implementation of a List}
 
 \end{document}

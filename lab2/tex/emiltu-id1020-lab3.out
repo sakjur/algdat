@@ -1,0 +1,5 @@
+\BOOKMARK [1][-]{section.1}{BubbleSort Theory}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Inversions}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Properties of BubbleSort}{section.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.2.1}{Time-complexity}{subsection.1.2}% 4
+\BOOKMARK [3][-]{subsubsection.1.2.2}{Stability}{subsection.1.2}% 5

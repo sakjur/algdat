@@ -1,0 +1,94 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{algorithmicx}
+
+\lstset{
+  language=Java,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  breaklines=true,
+  frame=lr,
+  captionpos=b,
+  showstringspaces=false,
+  escapeinside={@*}{*@}
+}
+\newcounter{counter}
+
+\title{ID1020 Laboration 3}
+\author{Emil Tullstedt}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{BubbleSort Theory}
+\label{sec:bubblesorttheory}
+
+\subsection{Inversions}
+
+A pair of indices are an inversion if $i < j$ and $\bar{a}_i > \bar{a}_j$. \textit{There can be no inversions in a sorted list}.
+
+As BubbleSort swaps two items when $i < i+1$ and $\bar{a}_i > \bar{a}_i+1$, there is a clear connection between inversions and swaps in BubbleSort. The difference between these two formul\ae s is that inversions take no respect to the distance between $i$ and $j$, whereas swap operations are only made on consecutive items. This implies that there must be at least one inversion for every swap (as every swap is an inversion).
+
+If we decrease the inversion count by one for each swap, we must therefore get a number $x \geq 0$ of inversions left after we are done with every swap. As there is nothing that fulfills $i < j$ and $a_i > a_j$ when the list is sorted, we can further draw the conclusion that $x = 0$ and the amount of swaps must be equivalent to the amounts of inversions for any given list.
+
+\subsection{Properties of BubbleSort}
+
+\subsubsection{Time-complexity}
+
+\begin{small}
+\vspace{.3em}
+\hrule
+\vspace{.3em}
+\textbf{Pre-conditions:} The preconditions for BubbleSort is a list $\bar{a}$ of comparable items
+
+\textbf{Post-conditions:} The postconditions of BubbleSort is a sorted list $a$ of the same items as in $\bar{a}$
+
+\textbf{Assumption:} For BubbleSort to work as intended, the \texttt{\textsc{Swap}}-operation must has a time-complexity of $O(1)$. This will be assumed in the analysis of the time-complexity of the BubbleSort.
+
+\vspace{.3em}
+\hrule
+\vspace{.3em}
+\end{small}
+
+The BubbleSort works by going through the list, looking at two items at a time and placing them in order, effectively placing the largest item at the back \footnote{BubbleSort iterations also positions the other items in a more correct order, but that doesn't affect worst or best-case and is not guaranteed, and is therefore irrelevant for this task}, then continuing until the list is sorted.
+
+Because the BubbleSort only guarantee that the greatest (last) item is placed correctly placed, naïvely, this imply that the worst time-complexity of BubbleSort would be $O(n^2)$. This is not entirely true, as the last item in the list is always correct on the second iteration, the second last item is always correctly placed on the third iteration and so on. Because of this, we can ignore the last item after each iteration, and therefore the time complexity of any list $\bar{a}_n$ containing $n$ comparable items can be described using
+
+$$ f(\bar{a}_n) = n + (n-1) + (n-2) + \cdots + 3 + 2$$
+
+This is equal to
+
+$$ f(\bar{a}_n) = n! - 1$$
+
+\textit{Therefore} we can draw the conclusion that the worst order of growth for BubbleSort is factorial, or $O(n!)$.
+
+As BubbleSort always make a swap if \textit{and only if} the items in a list is out of order and keeps track of if it has moved something in the current iteration, if BubbleSort is used to sort an already sorted list, BubbleSort will finish after the first iteration where it goes through all the items and can at best achieve a linear time-complexity of $O(n)$.
+
+\textbf{In conclusion}
+
+\begin{itemize}
+\item Worst-case order of growth for BubbleSort is $O(n!)$
+\item Best-case order of growth for BubbleSort is $O(n)$
+\end{itemize}
+
+\subsubsection{Stability}
+Since the \texttt{\textsc{Swap}}-function is only called in case $a_i > a_{i+1}$ in BubbleSort, BubbleSort acts in a stable way and won't place $2_2$ before $2_1$ for any circumstance (assuming that $2_1$ is the first occurrence of $2$).
+
+If we'd instead use $a_i \geq a_{i+1}$, we would see that the algorithm would become unstable and wouldn't keep the original order of the items.
+
+A real-world scenario where this might matter is if you sort authorization logs (sorted by when they were entered) by username, a stable algorithm would keep the order of the log-posts, and thus automatically ensure you won't have to sort the list again based on dates.
+\end{document}

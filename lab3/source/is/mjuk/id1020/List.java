@@ -68,13 +68,15 @@ public class List<T> {
         return this.length;
     }
 
-    public void sort() {
+    public int sort() {
         int ticker = this.length() - 2;
         boolean swapped = true;
 
         Node curr;
         Node next;
         Node prev;
+
+        int counter = 0;
 
         while (ticker >= 0 && swapped == true) {
             swapped = false;
@@ -90,6 +92,7 @@ public class List<T> {
                 if (curr.getContent().compareTo(next.getContent()) > 0) {
                     swapped = true;
                     curr = swap(next, curr, prev);
+                    counter++;
                 }
                 
                 prev = curr;
@@ -100,6 +103,8 @@ public class List<T> {
             
             ticker = ticker - 1;
         }
+
+        return counter;
     }
 
     private Node swap(Node lesser, Node greater, Node previous) {
@@ -113,5 +118,29 @@ public class List<T> {
         }
 
         return lesser;
+    }
+
+    public int inversions() {
+        Node curr = this.first();
+        int count = 0;
+
+        while(curr != null) {
+            Node inner = curr.getNext();
+
+            while (inner != null) {
+
+                if (inner.getContent().compareTo(curr.getContent()) < 0) {
+                    count++;
+                    // StdOut.println("(" + curr.toString() + ", "
+                    //    + inner.getContent() + ")");
+                }
+
+                inner = inner.getNext();
+            }
+
+            curr = curr.getNext();
+        }
+
+        return count;
     }
 }

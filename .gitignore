@@ -20,4 +20,5 @@ target/
 *.pdf
 *.synctex.gz
 *.toc
+*.out
 

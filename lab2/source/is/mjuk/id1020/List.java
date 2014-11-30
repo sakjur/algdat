@@ -1,3 +1,11 @@
+//
+// 1) Linked list
+// 2) Any other single way-traversable list of arbitrary data type
+// 3) The worst case in my linked list is ith which has O(N)
+// 4) My additional space complexity per element is 32, as the list contains
+// 	two references and a overhead of 16 bytes.
+//
+
 package is.mjuk.id1020;
 
 import java.lang.StringBuilder;
@@ -28,11 +36,15 @@ public class List {
 	public static void printList(List l) {
 		if (l.length() > 0) {
 			StringBuilder rv = new StringBuilder();
-			rv.append("(cons " + l.first().toString() + " nil)");
 		
-			for (int i = 1; i < l.length(); i++) {
+			Node current = l.first();
+			rv.append("(cons " + current.toString() + " nil)");
+
+			while (current.hasNext())
+			{
+				current = current.getNext();
 				rv.insert(0, " ");
-				rv.insert(0, l.ith(i).toString());
+				rv.insert(0, current.toString());
 				rv.insert(0, "(cons ");
 				rv.append(")");
 			}
@@ -61,13 +73,13 @@ public class List {
 
 	public Node rest()
 	{
-		Node currNode = null;
-
 		if (this.firstNode != null) {
-			currNode = this.firstNode.getNext();
+			this.firstNode = this.firstNode.getNext();
 		}
+		
+		this.length = this.length - 1;
 
-		return currNode;
+		return this.firstNode;
 	}
 
 	public void prepend(Object o) {
