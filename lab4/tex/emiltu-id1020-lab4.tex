@@ -1,0 +1,81 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{algorithmicx}
+\usepackage{enumitem}
+
+\lstset{
+  language=Java,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  breaklines=true,
+  frame=lr,
+  captionpos=b,
+  showstringspaces=false,
+  escapeinside={@*}{*@}
+}
+\newcounter{counter}
+
+\title{ID1020 Laboration 3}
+\author{Emil Tullstedt}
+
+\hyphenation{definition}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Trees}
+\label{sec:trees}
+
+\subsection{Graphs \textit{\&} Trees}
+
+Following is an analysis of five directed graphs to determine if they fit into the definition of a tree\footnote{Doesn't contain any cycles \textit{\&} has one element from which every other element can be derived} or, if it isn't a tree, which cycles are contained within the graph.
+
+\begin{enumerate}[label=\bfseries Graph \arabic*:]
+\item $G_1$ is a tree with the root in 1
+\item $G_2$ is a tree with the root in 1
+\item $G_3$ has a cycle 6--2--1
+\item $G_4$ is a tree with the root in 6
+\item $G_5$ has a cycle 6--2--1--4
+\end{enumerate}
+\newpage
+\subsection{Tree Traversal}
+
+The tuples given below is five traversals of a tree which has it's root 4 which has the children 2 and 6. The children of 2 is 1 and 3 and the children of 6 is 5 and 7.
+
+For the first four traversals, the instructions \textsc{Traverse}($l$), \textsc{Traverse}($r$) and \textsc{Visit}($v$) are utilized. These are parsed as if they were defined
+
+\begin{description}[style=multiline,leftmargin=3cm]
+\item[\textsc{Traverse}($l$)] If possible, move to the first child and execute an iteration of the algorithm on that child
+\item[\textsc{Traverse}($r$)] Same as \textsc{Traverse}($l$) but for the second child
+\item[\textsc{Visit}($v$)] Append the tuple with the current vector $v$
+\end{description}
+
+The final traversal (breadth-first) is defined in pseudocode using the definition of \textsc{Visit}($v$) given above. The breadth-first algorithm is parsed as if it begins with the left-most item on a row, appends it to the tuple and then continues from left to right on that row until it finds the right-most item, when it continues in the same manner on the next row.
+
+The list below describes the different scenarios.
+
+\begin{description}[style=multiline,leftmargin=6cm]
+\item[Pre-order] \texttt{(4, 2, 1, 3, 6, 5, 7)}
+\item[In-order (Ascending)] \texttt{(1, 2, 3, 4, 5, 6, 7)}
+\item[In-order (Descending)] \texttt{(7, 6, 5, 4, 3, 2, 1)}
+\item[Post-order] \texttt{(1, 3, 2, 5, 7, 6, 4)}
+\item[Breadth-first] \texttt{(4, 2, 6, 1, 3, 5, 7)}
+\end{description}
+\newpage
+\subsection{TreeSort}
+
+\end{document}
