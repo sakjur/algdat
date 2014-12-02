@@ -8,7 +8,9 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{algpseudocode}
 \usepackage{enumitem}
 
 \lstset{
@@ -26,7 +28,7 @@
 \title{ID1020 Laboration 3}
 \author{Emil Tullstedt}
 
-\hyphenation{definition}
+\hyphenation{definition algo-rithm}
 
 \begin{document}
 \maketitle
@@ -77,5 +79,75 @@ The list below describes the different scenarios.
 \end{description}
 \newpage
 \subsection{TreeSort}
+\subsubsection{Time-complexity}
+When analysing the algorithm for TreeSort given in task 2.3 one can quickly see that the task contains two loops that are running independently from each other. When splitting the algorithm into two parts, algorithm \ref{into_graph} and algorithm \ref{from_graph}, we can analyze them one by one instead of having to look at the whole picture at a time. The total time consumption will therefore be the sum of algorithm \ref{into_graph} and algorithm \ref{from_graph}.
 
+\begin{algorithm}
+\caption{Convert from list to graph}
+\label{into_graph}
+
+\begin{algorithmic}
+\While{\textsc{Length}($l$) $> 0$}
+\State $v\gets$\textsc{PopFirst}($l$)
+\State \textsc{Add}($T$, $v$) // This takes $O(\log n)$
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+The first part of the algorithm, given in algorithm \ref{into_graph}, iterates once over every item in the list $l$ (which contains $n > 0$ items) and places them on the correct place within the tree which takes $O(\log n)$ for each item $v$ in $n$. As we run this over all $n$ objects, we get a total time complexity of $O(n \log n)$.
+
+\begin{algorithm}
+\caption{Convert from graph to sorted list}
+\label{from_graph}
+
+\begin{algorithmic}
+\For{$v \in T$}
+\State \textsc{Append}($l$, $v$)
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+The second part of the algorithm, which is displayed in algorithm \ref{from_graph} uses the \textit{In-Order (asc)} from task 2.2 which visits all the nodes in an ascending order. This operation also has a big-oh of $O(n\log n)$ as it climbs the tree up to $\log n$ times for all the $n$ vertices.
+
+Therefore, according to the fact that algorithm \ref{into_graph} and \ref{from_graph} is the total, we can conclude that the function in it's entirety must be defined by $$\textsc{TreeSort}(l) = O(n\log n) + O(n\log n) = O(n\log n)$$
+
+As the tree is balanced on insertion, the input to algorithm \ref{from_graph} is the same no matter what permutation is inserted into algorithm \ref{into_graph} and thus the best-case will always be the same as worst-case, $O(n\log n)$.
+
+$$\therefore \textit{Worst-case} = \textit{Best-case} = O(n\log n)$$
+
+\subsubsection{Memory Complexity: Comparison with MergeSort}
+To determine which of \textsc{MergeSort} and \textsc{TreeSort} that is the most memory efficent, here's the definition of a few sizes that are shared between the two algorithms
+
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Size} & \textbf{Explanation}\\
+\hline
+$s_v$ & $j$ (probably 1--8B) & The size of each element in the list $l$\\
+\hline
+$s_{ref}$ & 8B & Size of a reference\\
+\hline
+$s_{oh}$ & 16B & Object overhead for each object \\
+\hline
+$|l|$ & $k$ & Number of elements in the list $l$\\
+\hline
+$s_{l}$ & $|l|(s_v + s_{ref} + s_{oh}) + s_{ref} + s_{oh}$ & Size of the entire linked list $l$\\
+\hline
+\end{tabular}
+
+Beginning with \textsc{TreeSort} the tree nodes have the form (ref, $v$, ref) which means that each node is an object (thus having the object overhead of 16B) with two references (á 8B, ergo 16B) and the vertice-content $v$ of undefined memory size.
+
+This nets a total of $(32 + s_v)$B per node within the tree. The tree in it's entirety contains of $|l|$ nodes. As the tree is an abstract concept of multiple linked nodes, there is no object overhead on the heap for the tree.
+
+The tree's complete size can therefore be described as $s_{tree} = |l|(32 + S_v)$ bytes. We also initialize a single linked list, which has the size of $s_{l} = |l|(s_v + 8 + 16) + 8 + 16 = |l|(s_v + 24) + 24$ bytes.
+
+The entire heap size of \textsc{TreeSort} should therefore be $$s_{ts} = |l|(2*s_v + 56) + 24\ \textrm{bytes}$$
+
+The \textsc{MergeSort} heap contains two arrays of size $|l|s_v + 24$B which nets to $$s_{ms} = 2|l|s_v + 48\ \textrm{bytes}$$
+
+This means that \textsc{MergeSort} is slightly more memory efficient than the \textsc{TreeSort}. Calculating the difference between $s_{ts}$ and $s_{ms}$ gives us $$\Delta(s_{ts}, s_{ms}) = s_{ts} - s_{ms} = (|l|(2 * s_v + 56) + 24) - (2|l|s_v + 48) = 56|l| - 24\ \textrm{bytes}$$
+
+\textit{A sidenote:} As \textsc{MergeSort} requires random element access to the elements in the list while \textsc{TreeSort} only assumes having access to the list in order, the \textsc{TreeSort} doesn't need consecutive memory areas available and can therefore be a better choice even in memory-limited areas.
+
+\subsubsection{Stability}
+\textsc{TreeSort} is stable as the duplicate values are returned in the order of insertion per the definition in the task.
 \end{document}
