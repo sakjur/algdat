@@ -25,6 +25,10 @@ task :run => :compile do |t|
 	sh "java -cp ./libs/stdlib-1.0.jar:classes is.mjuk.id1020.Main"
 end
 
+task :driver => :compile do |t|
+    sh "java -cp ./libs/stdlib-1.0.jar:classes is.mjuk.id1020.Driver"
+end
+
 task :doc => "docs" do |t|
 	sh "javadoc -sourcepath source/ -d docs/ is.mjuk.id1020"
 end

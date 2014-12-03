@@ -1,13 +1,19 @@
 package is.mjuk.id1020;
 
 import edu.princeton.cs.introcs.StdOut;
-import java.util.ArrayList;
 import java.util.Map.Entry;
-import java.util.Iterator;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.lang.StringBuilder;
 
-public class Trie implements Iterator<Entry<String, Integer>> {
-    Node root = new Node('\0');
-    Node state = null;
+public class Trie {  
+    private Node root = new Node('\0');
+    private Node state = null;
+
+    public Node getRoot()
+    {
+        return this.root;
+    }
 
     public void put(String k) 
     {
@@ -66,6 +72,11 @@ public class Trie implements Iterator<Entry<String, Integer>> {
         return count;
     }
 
+    public IterateTrie iterator(String prefix)
+    {
+        return new IterateTrie(prefix, this);
+    }
+
     public int count(String k)
     {
         return this.count(k.toCharArray());
@@ -90,23 +101,12 @@ public class Trie implements Iterator<Entry<String, Integer>> {
         return count;
     }
 
-    public Entry<String, Integer> next()
+    public Node dig(String k)
     {
-        
-        return null;
+        return this.dig(k.toCharArray());
     }
 
-    public boolean hasNext()
-    {
-        return false;
-    }
-
-    public void remove()
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    private Node dig(char[] k)
+    public Node dig(char[] k)
     {
         Node current = this.root;
 
@@ -147,10 +147,9 @@ public class Trie implements Iterator<Entry<String, Integer>> {
             if (c.getValue() > 0)
                 count += 1;
             if (children != null)
-                count += children_count(children);
+                count += num_of_children(children);
         }
 
         return count;
     }
-
 }

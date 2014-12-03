@@ -2,10 +2,12 @@ package is.mjuk.id1020;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.lang.StringBuilder;
 
 class Node implements Comparable<Node> 
 {
     private ArrayList<Node> children = new ArrayList();
+    private Node parent;
     private Character content = null;
     private Integer value = 0;
 
@@ -44,6 +46,7 @@ class Node implements Comparable<Node>
         if (this.hasChild(e))
             return;
         Node n = new Node(e);
+        n.setParent(this);
         this.children.add(n);
         Collections.sort(children);
     }
@@ -53,6 +56,16 @@ class Node implements Comparable<Node>
         int i = this.search(e);
         if (i != -1)
             this.children.remove(i);
+    }
+
+    public Node getParent()
+    {
+        return this.parent;
+    }
+
+    public void setParent(Node p)
+    {
+        this.parent = p;
     }
 
     public int getValue()
@@ -86,6 +99,25 @@ class Node implements Comparable<Node>
     public int compareTo(Node other)
     {
         return Character.compare(this.getContent(), other.getContent()); 
+    }
+
+    public String word()
+    {
+        Node n = this;
+        StringBuilder sb = new StringBuilder();
+
+        sb.insert(0, this.getContent());
+
+        n = n.getParent();
+
+        if (n != null)
+            while(n.getContent() != '\0')
+            {
+                sb.insert(0, n.getContent());
+                n = n.getParent();
+            }
+
+        return sb.toString();
     }
 
     private int search(Character key)
