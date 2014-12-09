@@ -20,7 +20,7 @@ public class Main {
             t.put(word);
         }
 
-        String testWord = "th";
+        String testWord = "g";
 
         StdOut.println();
 
