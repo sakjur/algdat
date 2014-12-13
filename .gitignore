@@ -21,4 +21,5 @@ target/
 *.synctex.gz
 *.toc
 *.out
+.idea/
 
