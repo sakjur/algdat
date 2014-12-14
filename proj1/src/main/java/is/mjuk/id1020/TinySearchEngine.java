@@ -1,14 +1,13 @@
 package is.mjuk.id1020;
 
 import is.mjuk.id1020.index.Index;
-import is.mjuk.id1020.index.IndexData;
 import is.mjuk.id1020.index.IndexNode;
+import is.mjuk.id1020.index.QuickSort;
 import se.kth.id1020.TinySearchEngineBase;
 import se.kth.id1020.util.Attributes;
 import se.kth.id1020.util.Document;
 import se.kth.id1020.util.Word;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TinySearchEngine implements TinySearchEngineBase {
@@ -16,25 +15,13 @@ public class TinySearchEngine implements TinySearchEngineBase {
 
     public List<Document> search(String key)
     {
-        ArrayList<IndexNode> wordlist = index.getWords();
-        int i = BinarySearch.search(key, wordlist);
-        IndexNode curr;
+        IndexNode in = this.index.getIndex(key);
 
-        try {
-            curr = wordlist.get(i);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println(key + " not found.");
+        if (in == null)
             return null;
-        }
 
-        ArrayList<Document> rv = new ArrayList<Document>();
-
-        for (IndexData data : curr.getAppearances())
-        {
-            rv.add(data.getDocument());
-        }
-
-        return rv;
+        QuickSort qs = new QuickSort(in.getAppearances());
+        return qs.sort();
     }
 
     public void insert(Word word, Attributes attr)

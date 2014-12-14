@@ -11,9 +11,9 @@ public class IndexNode implements Comparable<String> {
     private String label;
     private ArrayList<IndexData> appearances = new ArrayList<IndexData>();
 
-    public IndexNode(String key)
+    public IndexNode(Word key)
     {
-        this.label = key;
+        this.label = key.word;
     }
 
     public void insert(Attributes attr)
@@ -34,6 +34,23 @@ public class IndexNode implements Comparable<String> {
     public ArrayList<IndexData> getAppearances()
     {
         return this.appearances;
+    }
+
+    public ArrayList<Document> getDocuments()
+    {
+        return apperancesToDocument(this.getAppearances());
+    }
+
+    public static ArrayList<Document> apperancesToDocument(ArrayList<IndexData> appearances)
+    {
+        ArrayList<Document> rv = new ArrayList<Document>();
+
+        for (IndexData data : appearances)
+        {
+            rv.add(data.getDocument());
+        }
+
+        return rv;
     }
 
     public String toString()
