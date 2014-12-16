@@ -1,25 +1,31 @@
 package is.mjuk.id1020.index;
 
+import is.mjuk.id1020.utils.Swap;
 import se.kth.id1020.util.Document;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class QuickSort {
     boolean desc = true;
-    OrderBy order = OrderBy.OCCURRENCE;
-    ArrayList<IndexData> appearances;
+    OrderBy order = OrderBy.POPULARITY;
+    ArrayList<IndexStore> appearances;
 
-    public enum OrderBy {
+    public static enum OrderBy {
         RELEVANCE,
         POPULARITY,
         OCCURRENCE
     }
 
-    public QuickSort(ArrayList<IndexData> appearances)
+    public QuickSort(ArrayList<IndexStore> appearances)
     {
-        this.appearances = new ArrayList<IndexData>(appearances);
+        this.appearances = new ArrayList<IndexStore>(appearances);
+    }
+
+    public QuickSort(ArrayList<IndexStore> appearances, OrderBy order, boolean desc)
+    {
+        this.appearances = new ArrayList<IndexStore>(appearances);
+        this.order = order;
+        this.desc = desc;
     }
 
     public ArrayList<Document> sort()
@@ -27,11 +33,10 @@ public class QuickSort {
         if (appearances.size() == 0)
             return null;
 
-        // TODO: Build own shuffle algorithm or remove
-        Collections.shuffle(appearances);
+        // Collections.shuffle(appearances); // Not really necessary
         sort(0, appearances.size()-1);
 
-        return IndexNode.apperancesToDocument(appearances);
+        return EntryNode.apperancesToDocument(appearances);
     }
 
     public void sort(int lo, int hi)
@@ -44,22 +49,22 @@ public class QuickSort {
 
     public int partition(int lo, int hi)
     {
-        swap(appearances, lo, hi);
+        Swap.swap(appearances, lo, hi);
 
         for(int i = lo; i <= hi; i++)
         {
             if (this.compare(appearances.get(i), appearances.get(hi)))
             {
-                swap(appearances, i, lo);
+                Swap.swap(appearances, i, lo);
                 lo++;
             }
         }
 
-        swap(appearances, lo, hi);
+        Swap.swap(appearances, lo, hi);
         return lo;
     }
 
-    public boolean compare(IndexData fst, IndexData snd) {
+    private boolean compare(IndexStore fst, IndexStore snd) {
         boolean rv = false;
 
         if (order == OrderBy.POPULARITY) {
@@ -76,10 +81,5 @@ public class QuickSort {
             return !rv;
     }
 
-    public static <T> void swap(List<T> li, int a, int b)
-    {
-        T tmp = li.get(a);
-        li.set(a, li.get(b));
-        li.set(b, tmp);
-    }
+
 }
