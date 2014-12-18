@@ -1,9 +1,6 @@
 package is.mjuk.id1020;
 
 import is.mjuk.id1020.index.Dictionary;
-import is.mjuk.id1020.index.EntryNode;
-import is.mjuk.id1020.index.QuickSort;
-import is.mjuk.id1020.parser.ENode;
 import is.mjuk.id1020.parser.Lexer;
 import is.mjuk.id1020.parser.ParseTree;
 import se.kth.id1020.TinySearchEngineBase;
@@ -19,15 +16,15 @@ public class TinySearchEngine implements TinySearchEngineBase {
     public List<Document> search(String key)
     {
         String[] term = Lexer.tokenize(key);
-        ParseTree tree = new ParseTree(term);
-
-        EntryNode in = this.dictionary.getIndex(key);
-
-        if (in == null)
+        try {
+            ParseTree tree = new ParseTree(term);
+            List<Document> rv = tree.documentList(dictionary);
+            return rv;
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
             return null;
-
-        QuickSort qs = new QuickSort(in.getAppearances());
-        return qs.sort();
+        }
+        // return dictionary.search(key);
     }
 
     public void insert(Word word, Attributes attr)

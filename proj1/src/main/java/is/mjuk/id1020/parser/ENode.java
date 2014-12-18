@@ -2,16 +2,17 @@ package is.mjuk.id1020.parser;
 
 public class ENode implements ParserNode {
     public final static NodeType nodeType = NodeType.E;
-    private ParserNode children[] = new ParserNode[2];
+    public TNode left;
+    public OrderNode right;
 
-    public void setL(ParserNode child)
+    public void setL(TNode child)
     {
-        this.children[0] = child;
+        this.left = child;
     }
 
-    public void setR(ParserNode child)
+    public void setR(OrderNode child)
     {
-        this.children[1] = child;
+        this.right = child;
     }
 
     public ParserNode getParent()
@@ -21,17 +22,17 @@ public class ENode implements ParserNode {
 
     public NodeType getType()
     {
-        return TNode.nodeType;
+        return ENode.nodeType;
     }
 
-    public ParserNode traverseL()
+    public TNode traverseL()
     {
-        return this.children[0];
+        return left;
     }
 
-    public ParserNode traverseR()
+    public OrderNode traverseR()
     {
-        return this.children[1];
+        return right;
     }
 
 }

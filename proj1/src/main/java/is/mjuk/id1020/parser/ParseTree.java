@@ -9,6 +9,13 @@ package is.mjuk.id1020.parser;
  * Direction → {asc, desc}
  */
 
+import is.mjuk.id1020.index.Dictionary;
+import is.mjuk.id1020.index.EntryNode;
+import is.mjuk.id1020.index.QuickSort;
+import se.kth.id1020.util.Document;
+
+import java.util.List;
+
 public class ParseTree {
     ENode root = new ENode();
 
@@ -17,11 +24,46 @@ public class ParseTree {
         if (term.length < 1)
             return;
 
-        root.setL(new TNode(term[0]));
+        root.setL(new TNode());
 
-        for (int i = 1; i < term.length; i++)
+        for (int i = 0; i < term.length; i++)
         {
-            System.out.println(term[i]);
+            if (term[i].toLowerCase().equals("orderby"))
+            {
+                OrderNode order = new OrderNode();
+                order.setOrder(term[++i]);
+                order.setDesc(term[++i]);
+                root.setR(order);
+                break;
+            }
+
+            root.traverseL().insert(term[i]);
+        }
+    }
+
+    public List<Document> documentList(Dictionary dictionary)
+    {
+        EntryNode tmpNode = new EntryNode("TEMPORARY");
+
+        for (String word : root.traverseL().getChildren())
+        {
+            EntryNode in = dictionary.getIndex(word);
+
+            if (in == null) {
+                System.err.println("No word " + word + " found");
+                continue;
+            }
+
+            tmpNode.insert(in);
+        }
+
+        if (root.traverseR() != null)
+        {
+            QuickSort qs = new QuickSort(tmpNode.getAppearances(),
+                    root.traverseR().getOrder(), root.traverseR().getDesc());
+            return qs.sort();
+        } else {
+            return tmpNode.getDocuments();
         }
     }
 }

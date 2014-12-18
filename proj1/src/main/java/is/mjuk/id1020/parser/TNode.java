@@ -1,25 +1,36 @@
 package is.mjuk.id1020.parser;
 
+import javax.swing.text.html.parser.Parser;
+import java.util.ArrayList;
+
 public class TNode implements ParserNode {
     public final static NodeType nodeType = NodeType.T;
     private ParserNode parent;
-    private ParserNode children[] = new ParserNode[2];
+    private ArrayList<String> children = new ArrayList<String>();
 
-    public TNode(ParserNode fst, ParserNode snd)
+    public TNode()
     {
-        this.children[0] = fst;
-        this.children[1] = snd;
+        return;
     }
 
-    public TNode(ParserNode child)
+    public TNode(String child)
     {
-        this.children[0] = child;
+        this.children.add(child);
     }
-
 
     public ParserNode getParent()
     {
         return this.parent;
+    }
+
+    public void setParent(ParserNode parent)
+    {
+        this.parent = parent;
+    }
+
+    public ArrayList<String> getChildren()
+    {
+        return this.children;
     }
 
     public NodeType getType()
@@ -27,18 +38,9 @@ public class TNode implements ParserNode {
         return TNode.nodeType;
     }
 
-    public ParserNode traverseL()
+    public void insert(String word)
     {
-        return this.children[0];
+        children.add(word);
     }
 
-    public ParserNode traverseR()
-    {
-        return this.children[1];
-    }
-
-    public boolean insertWord(String word)
-    {
-        return false;
-    }
 }

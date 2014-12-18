@@ -1,9 +1,6 @@
 package is.mjuk.id1020.parser;
 
-import is.mjuk.id1020.index.EntryNode;
 import is.mjuk.id1020.index.QuickSort.OrderBy;
-
-import java.util.Objects;
 
 public class OrderNode implements ParserNode {
     public final static NodeType nodeType = NodeType.OrderBy;
@@ -19,16 +16,6 @@ public class OrderNode implements ParserNode {
     public NodeType getType()
     {
         return OrderNode.nodeType;
-    }
-
-    public ParserNode traverseL()
-    {
-        return null;
-    }
-
-    public ParserNode traverseR()
-    {
-        return null;
     }
 
     public OrderBy getOrder()

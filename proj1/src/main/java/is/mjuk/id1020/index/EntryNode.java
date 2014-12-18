@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class EntryNode implements Comparable<String> {
     private String label;
-    private ArrayList<IndexStore> appearances = new ArrayList<IndexStore>();
+    private ArrayList<EntryData> appearances = new ArrayList<EntryData>();
 
     public EntryNode(Word key)
     {
@@ -24,11 +24,26 @@ public class EntryNode implements Comparable<String> {
     public void insert(Attributes attr)
     {
         Document doc = attr.document;
-        IndexStore data = new IndexStore(doc);
+        EntryData data = new EntryData(doc);
 
         data = BinarySearch.getOrInsert(doc, appearances, data);
 
         data.insert(attr.occurrence);
+    }
+
+    public void insert(EntryNode data) {
+        for (EntryData entry : data.appearances)
+        {
+            Document doc = entry.getDocument();
+            EntryData store = new EntryData(doc);
+
+            store = BinarySearch.getOrInsert(doc, this.appearances, store);
+
+            for (Integer i : entry.getOccurrences())
+            {
+                store.insert(i);
+            }
+        }
     }
 
     public int compareTo(String key)
@@ -36,26 +51,39 @@ public class EntryNode implements Comparable<String> {
         return this.label.compareTo(key);
     }
 
-    public ArrayList<IndexStore> getAppearances()
+    public ArrayList<EntryData> getAppearances()
     {
         return this.appearances;
     }
 
     public ArrayList<Document> getDocuments()
     {
-        return apperancesToDocument(this.getAppearances());
+        return EntryNode.appearancesToDocument(this.getAppearances());
     }
 
-    public static ArrayList<Document> apperancesToDocument(ArrayList<IndexStore> appearances)
+    public static ArrayList<Document> appearancesToDocument(ArrayList<EntryData> appearances, boolean desc)
     {
         ArrayList<Document> rv = new ArrayList<Document>();
 
-        for (IndexStore data : appearances)
-        {
-            rv.add(data.getDocument());
-        }
+        if (desc)
+            for (int i = 0; i < appearances.size(); i++)
+            {
+                EntryData data = appearances.get(i);
+                rv.add(data.getDocument());
+            }
+        else
+            for (int i = appearances.size() - 1; i >= 0; i--)
+            {
+                EntryData data = appearances.get(i);
+                rv.add(data.getDocument());
+            }
 
         return rv;
+    }
+
+    public static ArrayList<Document> appearancesToDocument(ArrayList<EntryData> appearances)
+    {
+        return appearancesToDocument(appearances, true);
     }
 
     public String toString()

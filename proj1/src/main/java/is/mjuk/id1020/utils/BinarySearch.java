@@ -3,7 +3,7 @@ package is.mjuk.id1020.utils;
 import java.util.ArrayList;
 
 public class BinarySearch {
-    public static <T, AT extends Comparable<T>> int search(T key, ArrayList<AT> array)
+    public final static <T, AT extends Comparable<T>> int search(T key, ArrayList<AT> array)
     {
         if (array.size() == 0)
             return -1;
@@ -29,7 +29,7 @@ public class BinarySearch {
         return (-mid - 1);
     }
 
-    public static <T, AT extends Comparable<T>> AT getOrInsert(T key, ArrayList<AT> array, AT node)
+    public final static <T, AT extends Comparable<T>> AT getOrInsert(T key, ArrayList<AT> array, AT node)
     {
         if (array.size() == 0)
         {

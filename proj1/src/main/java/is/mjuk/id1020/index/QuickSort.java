@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class QuickSort {
     boolean desc = true;
     OrderBy order = OrderBy.POPULARITY;
-    ArrayList<IndexStore> appearances;
+    ArrayList<EntryData> appearances;
 
     public static enum OrderBy {
         RELEVANCE,
@@ -16,14 +16,14 @@ public class QuickSort {
         OCCURRENCE
     }
 
-    public QuickSort(ArrayList<IndexStore> appearances)
+    public QuickSort(ArrayList<EntryData> appearances)
     {
-        this.appearances = new ArrayList<IndexStore>(appearances);
+        this.appearances = new ArrayList<EntryData>(appearances);
     }
 
-    public QuickSort(ArrayList<IndexStore> appearances, OrderBy order, boolean desc)
+    public QuickSort(ArrayList<EntryData> appearances, OrderBy order, boolean desc)
     {
-        this.appearances = new ArrayList<IndexStore>(appearances);
+        this.appearances = new ArrayList<EntryData>(appearances);
         this.order = order;
         this.desc = desc;
     }
@@ -36,7 +36,7 @@ public class QuickSort {
         // Collections.shuffle(appearances); // Not really necessary
         sort(0, appearances.size()-1);
 
-        return EntryNode.apperancesToDocument(appearances);
+        return EntryNode.appearancesToDocument(appearances, desc);
     }
 
     public void sort(int lo, int hi)
@@ -47,7 +47,7 @@ public class QuickSort {
         sort(pivot+1, hi);
     }
 
-    public int partition(int lo, int hi)
+    public final int partition(int lo, int hi)
     {
         Swap.swap(appearances, lo, hi);
 
@@ -64,7 +64,7 @@ public class QuickSort {
         return lo;
     }
 
-    private boolean compare(IndexStore fst, IndexStore snd) {
+    private final boolean compare(EntryData fst, EntryData snd) {
         boolean rv = false;
 
         if (order == OrderBy.POPULARITY) {
@@ -72,13 +72,30 @@ public class QuickSort {
         } else if (order == OrderBy.RELEVANCE) {
             rv = fst.countOccurrences() > snd.countOccurrences();
         } else if (order == OrderBy.OCCURRENCE) {
-            rv = fst.getOccurrences().get(0) < snd.getOccurrences().get(0);
+            // rv = fst.getOccurrences().get(0) < snd.getOccurrences().get(0);
+            rv = compareOccurrences(fst, snd);
         }
 
-        if (desc)
-            return rv;
-        else
-            return !rv;
+        return rv;
+    }
+
+    private final boolean compareOccurrences(EntryData fst, EntryData snd)
+    {
+        boolean rv = fst.getOccurrences().size() > snd.getOccurrences().size();
+        int i = 0;
+
+        while (i < fst.getOccurrences().size() && i < fst.getOccurrences().size())
+        {
+            if (fst.getOccurrences().get(i) == snd.getOccurrences().get(i))
+                i++;
+            else
+            {
+                rv = fst.getOccurrences().get(i) < snd.getOccurrences().get(i);
+                break;
+            }
+        }
+
+        return rv;
     }
 
 
