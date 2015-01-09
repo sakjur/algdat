@@ -64,7 +64,7 @@ public class QuickSort {
         return lo;
     }
 
-    private final boolean compare(EntryData fst, EntryData snd) {
+    public final boolean compare(EntryData fst, EntryData snd) {
         boolean rv = false;
 
         if (order == OrderBy.POPULARITY) {
@@ -79,7 +79,7 @@ public class QuickSort {
         return rv;
     }
 
-    private final boolean compareOccurrences(EntryData fst, EntryData snd)
+    public final boolean compareOccurrences(EntryData fst, EntryData snd)
     {
         boolean rv = fst.getOccurrences().size() > snd.getOccurrences().size();
         int i = 0;
