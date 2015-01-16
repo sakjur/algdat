@@ -1,0 +1,263 @@
+diff -r proj1/src/main/java/is/mjuk/id1020/index/Dictionary.java proj2/src/main/java/is/mjuk/id1020/index/Dictionary.java
+3d2
+< import is.mjuk.id1020.utils.BinarySearch;
+9d7
+< import java.util.ArrayList;
+12,13c10,40
+< public class Dictionary {
+<     ArrayList<EntryNode> words = new ArrayList<EntryNode>();
+---
+> /**
+>  * Container for a sorted list of words
+>  * <p>
+>  * This is a container for storing words as a index sorted by the word's ASCII-alphabetical order.
+>  * The Dictionary class is implemented as a red-black tree as presented in Sedgewick's Algorithms 4e chapter 3.3
+>  */
+> public class Dictionary
+> {
+>     public static final boolean RED = true;
+>     public static final boolean BLACK = false;
+> 
+>     private EntryNode root;
+> 
+>     public static boolean isRed(EntryNode node) {
+>         if (node == null) return false;
+>         return node.color;
+>     }
+> 
+>     public static int size(EntryNode node) {
+>         if (node == null) return 0;
+>         return node.nodesInSubtree;
+>     }
+> 
+>     public static EntryNode rotateLeft(EntryNode node)
+>     {
+>         EntryNode subnode = node.right;
+>         node.right = subnode.left;
+>         subnode.left = node;
+>         updateAfterRot(node, subnode);
+>         return subnode;
+>     }
+15c42
+<     public void insert(Word word, Attributes attr)
+---
+>     public static EntryNode rotateRight(EntryNode node)
+16a44,58
+>         EntryNode subnode = node.left;
+>         node.left = subnode.right;
+>         subnode.right = node;
+>         updateAfterRot(node, subnode);
+>         return subnode;
+>     }
+> 
+>     private static void updateAfterRot(EntryNode node, EntryNode subnode) {
+>         subnode.color = node.color;
+>         node.color = RED;
+>         subnode.nodesInSubtree = node.nodesInSubtree;
+>         node.nodesInSubtree = 1 + size(node.left) + size(node.right);
+>     }
+> 
+>     public void insert(Word word, Attributes attr) {
+20c62,71
+<         EntryNode node = new EntryNode(word);
+---
+>         this.root = insert(root, word, attr);
+>         this.root.color = BLACK;
+>     }
+> 
+>     public EntryNode insert(EntryNode node, Word word, Attributes attr) {
+>         if (node == null) {
+>             EntryNode newNode = new EntryNode(word, 1, RED);
+>             newNode.insert(attr);
+>             return newNode;
+>         }
+22c73,80
+<         node = BinarySearch.getOrInsert(word.word, words, node);
+---
+>         int cmp = node.compareTo(word.word);
+>         if      (cmp > 0) node.left  = insert(node.left, word, attr);
+>         else if (cmp < 0) node.right = insert(node.right, word, attr);
+>         else node.insert(attr);
+> 
+>         if (isRed(node.right) && !isRed(node.left)) node = rotateLeft(node);
+>         if (isRed(node.left) && isRed(node.left.left)) node = rotateRight(node);
+>         if (isRed(node.left) && isRed(node.right)) flipColors(node);
+24c82,83
+<         node.insert(attr);
+---
+>         node.nodesInSubtree = size(node.left) + size(node.right) + 1;
+>         return node;
+27,29c86,87
+<     public ArrayList<EntryNode> getWords()
+<     {
+<         return this.words;
+---
+>     public EntryNode getIndex(String key) {
+>         return getIndex(root, key);
+32,43c90,91
+<     public EntryNode getIndex(String key)
+<     {
+<         ArrayList<EntryNode> wordList = this.getWords();
+<         int i = BinarySearch.search(key, wordList);
+<         EntryNode curr;
+< 
+<         try {
+<             curr = wordList.get(i);
+<         } catch (ArrayIndexOutOfBoundsException e) {
+<             System.out.println(key + " not found.");
+<             return null;
+<         }
+---
+>     public EntryNode getIndex(EntryNode node, String key) {
+>         if (node == null) return null;
+45c93,96
+<         return curr;
+---
+>         int cmp = node.compareTo(key);
+>         if      (cmp > 0) return getIndex(node.left, key);
+>         else if (cmp < 0) return getIndex(node.right, key);
+>         else return node;
+55a107,112
+>     }
+> 
+>     private void flipColors(EntryNode node) {
+>         node.color = RED;
+>         node.left.color = BLACK;
+>         node.right.color = BLACK;
+diff -r proj1/src/main/java/is/mjuk/id1020/index/EntryNode.java proj2/src/main/java/is/mjuk/id1020/index/EntryNode.java
+3a4
+> import is.mjuk.id1020.utils.Conversion;
+10,11c11,16
+< public class EntryNode implements Comparable<String> {
+<     private String label;
+---
+> /**
+> * Created by sakjur on 13/01/15.
+> */
+> public class EntryNode
+> {
+>     private char[] label;
+14,16c19,26
+<     public EntryNode(Word key)
+<     {
+<         this.label = key.word;
+---
+>     protected EntryNode left, right;
+>     protected int nodesInSubtree;
+>     protected boolean color;
+> 
+>     public EntryNode(Word key, int nodesInSubtree, boolean isRed) {
+>         this.nodesInSubtree = nodesInSubtree;
+>         this.color = isRed;
+>         this.label = key.word.toCharArray();
+19,21c29,32
+<     public EntryNode(String key)
+<     {
+<         this.label = key;
+---
+>     public EntryNode(String str, int nodesInSubtree, boolean isRed) {
+>         this.nodesInSubtree = nodesInSubtree;
+>         this.color = isRed;
+>         this.label = str.toCharArray();
+51c62
+<         return this.label.compareTo(key);
+---
+>         return String.valueOf(this.label).compareTo(key);
+61,86c72
+<         return EntryNode.appearancesToDocument(this.getAppearances());
+<     }
+< 
+<     public static ArrayList<Document> appearancesToDocument(ArrayList<EntryData> appearances, boolean desc)
+<     {
+<         ArrayList<Document> rv = new ArrayList<Document>();
+< 
+<         if (desc)
+<             for (int i = 0; i < appearances.size(); i++)
+<             {
+<                 EntryData data = appearances.get(i);
+<                 rv.add(data.getDocument());
+<             }
+<         else
+<             for (int i = appearances.size() - 1; i >= 0; i--)
+<             {
+<                 EntryData data = appearances.get(i);
+<                 rv.add(data.getDocument());
+<             }
+< 
+<         return rv;
+<     }
+< 
+<     public static ArrayList<Document> appearancesToDocument(ArrayList<EntryData> appearances)
+<     {
+<         return appearancesToDocument(appearances, true);
+---
+>         return Conversion.appearancesToDocument(this.getAppearances());
+91c77
+<         return this.label;
+---
+>         return String.valueOf(this.label);
+Only in proj1/src/main/java/is/mjuk/id1020/index: QuickSort.java
+Only in proj2/src/main/java/is/mjuk/id1020: lexer
+Only in proj1/src/main/java/is/mjuk/id1020/parser: Lexer.java
+diff -r proj1/src/main/java/is/mjuk/id1020/parser/NodeType.java proj2/src/main/java/is/mjuk/id1020/parser/NodeType.java
+6d5
+<     Word,
+8,9d6
+<     Property,
+<     Direction
+diff -r proj1/src/main/java/is/mjuk/id1020/parser/OrderNode.java proj2/src/main/java/is/mjuk/id1020/parser/OrderNode.java
+3c3
+< import is.mjuk.id1020.index.QuickSort.OrderBy;
+---
+> import is.mjuk.id1020.utils.QuickSort.OrderBy;
+diff -r proj1/src/main/java/is/mjuk/id1020/parser/ParseTree.java proj2/src/main/java/is/mjuk/id1020/parser/ParseTree.java
+14c14
+< import is.mjuk.id1020.index.QuickSort;
+---
+> import is.mjuk.id1020.utils.QuickSort;
+46c46
+<         EntryNode tmpNode = new EntryNode("TEMPORARY");
+---
+>         EntryNode tmpNode = new EntryNode("TEMPORARY", 0, false);
+53c53
+<                 System.err.println("No word " + word + " found");
+---
+>                 // System.err.println("No word " + word + " found");
+diff -r proj1/src/main/java/is/mjuk/id1020/parser/TNode.java proj2/src/main/java/is/mjuk/id1020/parser/TNode.java
+3d2
+< import javax.swing.text.html.parser.Parser;
+diff -r proj1/src/main/java/is/mjuk/id1020/TinySearchEngine.java proj2/src/main/java/is/mjuk/id1020/TinySearchEngine.java
+4c4
+< import is.mjuk.id1020.parser.Lexer;
+---
+> import is.mjuk.id1020.lexer.Lexer;
+8a9
+> import se.kth.id1020.util.Sentence;
+30c31
+<     public void insert(Word word, Attributes attr)
+---
+>     public void preInserts()
+32c33,51
+<         this.dictionary.insert(word, attr);
+---
+> 
+>     }
+> 
+>     public void insert(Sentence sentence, Attributes attr)
+>     {
+>         for (Word word : sentence.getWords())
+>         {
+>             this.dictionary.insert(word, attr);
+>         }
+>     }
+> 
+>     public void postInserts()
+>     {
+> 
+>     }
+> 
+>     public String infix(String prefix)
+>     {
+>         return prefix;
+Only in proj2/src/main/java/is/mjuk/id1020/utils: Conversion.java
+Only in proj2/src/main/java/is/mjuk/id1020/utils: QuickSort.java

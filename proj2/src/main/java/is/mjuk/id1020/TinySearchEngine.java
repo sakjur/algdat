@@ -1,11 +1,12 @@
 package is.mjuk.id1020;
 
 import is.mjuk.id1020.index.Dictionary;
-import is.mjuk.id1020.parser.Lexer;
+import is.mjuk.id1020.lexer.Lexer;
 import is.mjuk.id1020.parser.ParseTree;
 import se.kth.id1020.TinySearchEngineBase;
 import se.kth.id1020.util.Attributes;
 import se.kth.id1020.util.Document;
+import se.kth.id1020.util.Sentence;
 import se.kth.id1020.util.Word;
 
 import java.util.List;
@@ -27,8 +28,26 @@ public class TinySearchEngine implements TinySearchEngineBase {
         // return dictionary.search(key);
     }
 
-    public void insert(Word word, Attributes attr)
+    public void preInserts()
     {
-        this.dictionary.insert(word, attr);
+
+    }
+
+    public void insert(Sentence sentence, Attributes attr)
+    {
+        for (Word word : sentence.getWords())
+        {
+            this.dictionary.insert(word, attr);
+        }
+    }
+
+    public void postInserts()
+    {
+
+    }
+
+    public String infix(String prefix)
+    {
+        return prefix;
     }
 }

@@ -1,0 +1,23 @@
+proj2/src/main/java/is/mjuk/id1020
+├── App.java
+├── index
+│   ├── Dictionary.java
+│   ├── EntryData.java
+│   └── EntryNode.java
+├── lexer
+│   └── Lexer.java
+├── parser
+│   ├── ENode.java
+│   ├── NodeType.java
+│   ├── OrderNode.java
+│   ├── ParserNode.java
+│   ├── ParseTree.java
+│   └── TNode.java
+├── TinySearchEngine.java
+└── utils
+    ├── BinarySearch.java
+    ├── Conversion.java
+    ├── QuickSort.java
+    └── Swap.java
+
+4 directories, 16 files

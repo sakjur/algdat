@@ -43,14 +43,14 @@ public class ParseTree {
 
     public List<Document> documentList(Dictionary dictionary)
     {
-        EntryNode tmpNode = new EntryNode("TEMPORARY");
+        EntryNode tmpNode = new EntryNode("TEMPORARY", 0, false);
 
         for (String word : root.traverseL().getChildren())
         {
             EntryNode in = dictionary.getIndex(word);
 
             if (in == null) {
-                System.err.println("No word " + word + " found");
+                // System.err.println("No word " + word + " found");
                 continue;
             }
 

@@ -1,7 +1,6 @@
 package is.mjuk.id1020.utils;
 
 import is.mjuk.id1020.index.EntryData;
-import is.mjuk.id1020.index.EntryNode;
 import se.kth.id1020.util.Document;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class QuickSort {
         // Collections.shuffle(appearances); // Not really necessary
         sort(0, appearances.size()-1);
 
-        return EntryNode.appearancesToDocument(appearances, desc);
+        return Conversion.appearancesToDocument(appearances, desc);
     }
 
     public void sort(int lo, int hi)
